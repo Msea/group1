@@ -38,11 +38,11 @@ public class DataParser {
   String[][][][] test = sortData(data);
 
   for(int i=0; i<test.length; i++){
-    printWriter.println("new symbol");
+    //printWriter.println("new symbol");
     for(int j=0; j<test[i].length; j++){
-      printWriter.println("new exchange");
+     // printWriter.println("new exchange");
       for (int k=0; k<test[i][j].length; k++){
-        printWriter.println("new row");
+      //  printWriter.println("new row");
         for (int m=0; m<test[i][j][k].length; m++){
           printWriter.print(test[i][j][k][m]);
           printWriter.print(",");
@@ -58,14 +58,14 @@ printWriter.close();
   public static String[][][][] sortData(String[][] data){
     String[][][][] sortedData = new String[data.length][data.length][data.length][4];
 
-    for(int i =0; i < data.length; i++){
-      boolean symbolExists = false;
-      for (int j=0; j< sortedData.length; j++){
-        if ((data[i][0]).equals(sortedData[j][0][0][0])){
+    for(int i =0; i < data.length; i++){//loop through data level
+      boolean symbolExists = false;//assume no symbol in sorted yet matches one in data[i]
+      for (int j=0; j< sortedData.length; j++){//loop through top level of sorted looking for symbol
+        if ((data[i][0]).equals(sortedData[j][0][0][0])){//we have found symbol!
           symbolExists = true;
-          boolean exchangeExists = false;
-          for (int k=0; k<(sortedData[j].length); k++){
-            if ((data[i][1]).equals(sortedData[j][k][0][1])){
+          boolean exchangeExists = false;//assume the symbol, exchange pair of data[i] doesn't exist yet in sorted
+          for (int k=0; k<(sortedData[j].length); k++){//loop through second level of sorted with that symbol, looking for the exchange
+            if ((data[i][1]).equals(sortedData[j][k][0][1])){//found exchange
               exchangeExists = true;
               //In this case the Symbol, Exchange pair already exists at j,k. We will now look for the next available row in this array to place the entry in question (data[i]).
               boolean notYet = true;
@@ -73,9 +73,6 @@ printWriter.close();
                 if (sortedData[j][k][m][0]==null){
                   notYet = false;//no need to continue looping
                   //we have found the next empty, so put it in:
-                  // for (int n=0; n<4; n++){
-                  //   sortedData[j][k][m][n] = data[i][n];
-                  // }
                 sortedData[j][k][m] = data[i];
                 }
               }
@@ -88,9 +85,6 @@ printWriter.close();
               if (sortedData[j][m][0][0]==null){
                 notYet = false;//no need to continue looping
                 //we have found the next empty, so put it in:
-                // for (int n=0; n<4; n++){
-                //   sortedData[j][m][0][n] = data[i][n];
-                // }
                 sortedData[j][m][0] = data[i];
               }
             }
@@ -104,9 +98,6 @@ printWriter.close();
           if (sortedData[m][0][0][0]==null){
             notYet = false;//no need to continue looping
             //we have found the next empty, so put it in:
-            // for (int n=0; n<4; n++){
-            //   sortedData[m][0][0][n] = data[i][n];
-            // }
             sortedData[m][0][0] = data[i];
           }
         }
@@ -120,7 +111,7 @@ printWriter.close();
 
   //method takes a 4-d array, and removes all nested arrays with null initials (in our program that is just arrays with null arrays)
   public static String[][][][] constrictData(String[][][][] data){
-    String[][][][] constrictedData = new String[data.length][data.length][data.length][0];
+    String[][][][] constrictedData = new String[data.length][0][0][0];
     boolean moreSymbols = true;
     boolean moreExchanges;
     boolean moreTrades;
@@ -129,7 +120,7 @@ printWriter.close();
     for (int i = 0; moreSymbols && i<data.length; i++){
       if (data[i][0][0][0]==null){
         //in this case we have found our last Symbol
-        constrictedData = new String[i][data.length][data.length][0];
+        constrictedData = new String[i][data.length][0][0];
         moreSymbols = false;
       }
     }
