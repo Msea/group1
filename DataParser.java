@@ -1,6 +1,6 @@
 import java.util.Scanner;
 import java.io.*;
-//import java.util.Arrays; 
+import java.util.Arrays; 
 
 public class DataParser {
 
@@ -15,7 +15,7 @@ public class DataParser {
     String fromFile;
     //data = new String[cols][rows];
 
-
+//put all this in method
     Scanner scanFile = new Scanner(new FileReader ("Data Files/input1.csv"));
     while (scanFile.hasNext()){
       scanFile.next();
@@ -36,6 +36,23 @@ public class DataParser {
     
     
   String[][][][] test = sortData(data);
+  float a = averagePriceSymExchgn(test[0][1]);
+  float b = averagePriceSym(test[0]);
+  float c = minPriceSymExchgn(test[0][0]);
+  float d = minPriceSym(test[0]);
+  float e = maxPriceSymExchgn(test[0][0]);
+  float f = maxPriceSym(test[0]);
+    int g = totalQuantSymExchgn(test[0][0]);
+  int h = totalQuantSym(test[0]);
+  System.out.print(a);
+  System.out.print(b);
+  System.out.print(c);
+  System.out.print(d);  System.out.print(e);
+  System.out.print(f);
+  System.out.print(g);
+  System.out.print(h); 
+
+
 
   for(int i=0; i<test.length; i++){
     //printWriter.println("new symbol");
@@ -105,8 +122,9 @@ printWriter.close();
 
     }
     String[][][][] constrictedSortedData = constrictData(sortedData);
+    String[][][][] alphabetizedConstrictedSortedData = alphabatizeData(constrictedSortedData);
 
-    return constrictedSortedData;
+    return alphabetizedConstrictedSortedData;
   }
 
   //method takes a 4-d array, and removes all nested arrays with null initials (in our program that is just arrays with null arrays)
@@ -152,7 +170,143 @@ printWriter.close();
     return constrictedData;
   }
 
+  public static String[][][][] alphabatizeData(String[][][][] data){
+    String[] toSort;
+    String[] toSortUpper = new String[data.length];
+    int largestLength = 0;
+    //determine needed starting dimensions for alphebatized
+    for (int i=0; i<data.length; i++){
+      if (data[i].length > largestLength){
+        largestLength = data[i].length;
+      }
+    }
+    String[][][][] alphabetized = new String[data.length][largestLength][0][4];
 
+    for (int i=0; i<data.length; i++){
+      toSortUpper[i] = data[i][0][0][0];//this is the symbol
+    }
+    Arrays.sort(toSortUpper);
+
+    for (int i=0;i<data.length;i++){
+      toSort = new String[data[i].length];
+      for (int j=0; j<data[i].length;j++){
+        toSort[j] = data[i][j][0][1];//this is the exchange letter
+      }
+      Arrays.sort(toSort);
+      //now let's put them back in order
+      //first find the thing in the top level data, that goes with Uppersorted[i]
+        boolean stillLookingUpper = true; 
+        for (int n=0; stillLookingUpper && n<data.length; n++){
+          if (data[n][0][0][0].equals(toSortUpper[i])){
+            //found it
+            stillLookingUpper = false;
+            for (int j=0; j<data[i].length;j++){
+            //lets find the thing in data[i], that goes with sorted[j], and copy that into alphebatized[i][j]
+            boolean stillLooking = true;
+            for (int k=0; stillLooking && k<data[i].length; k++){
+              if (data[n][k][0][1].equals(toSort[j])){
+                //found it
+                alphabetized[i][j] = new String[data[n][k].length][4];
+                 for(int m=0; m<data[n][k].length;m++){
+                  alphabetized[i][j][m] = data[n][k][m];
+                }
+                stillLooking = false;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return alphabetized;
+  }
+
+  public static float averagePriceSymExchgn(String[][] data){
+    float sum = 0;
+    for (int i=0;i<data.length; i++){
+      sum+=Float.parseFloat(data[i][2]);
+    }
+    return (sum/data.length);
+  }
+
+  public static float averagePriceSym(String[][][] data){
+    float sum = 0;
+    float entries = 0;
+    for (int i=0;i<data.length; i++){
+      for (int j=0;j<data[i].length; j++){
+        sum += Float.parseFloat(data[i][j][2]);
+        entries +=1;
+      }
+    }
+    if (entries == 0){entries=1;}
+    return (sum/entries);
+  }
+
+  public static float minPriceSymExchgn(String[][] data){
+    float min = Float.parseFloat(data[0][2]);
+    for (int i=0;i<data.length; i++){
+      float f = Float.parseFloat(data[i][2]);
+      if (f< min){
+        min = f;
+      }
+    }
+    return min;
+  }
+
+  public static float minPriceSym(String[][][] data){
+    float min = Float.parseFloat(data[0][0][2]);
+    for (int i=0;i<data.length; i++){
+      for (int j=0;j<data[i].length; j++){
+        float f = Float.parseFloat(data[i][j][2]);
+        if (f< min){
+          min = f;
+        }
+      }
+    }
+    return min;
+  }
+
+  public static float maxPriceSymExchgn(String[][] data){
+    float max = 0;
+    for (int i=0;i<data.length; i++){
+      float f = Float.parseFloat(data[i][2]);
+      if (f>max){
+        max = f;
+      }
+    }
+    return max;
+  }
+
+  public static float maxPriceSym(String[][][] data){
+    float max = 0;
+    for (int i=0;i<data.length; i++){
+      for (int j=0;j<data[i].length; j++){
+        float f = Float.parseFloat(data[i][j][2]);
+        if (f>max){
+          max = f;
+        }
+      }
+    }
+    return max;
+  }
+
+  public static int totalQuantSymExchgn(String[][] data){
+    int total = 0;
+    for (int i=0;i<data.length; i++){
+      total +=Integer.parseInt(data[i][3]);
+    }
+    return total;
+  }
+
+  public static int totalQuantSym(String[][][] data){
+    int total = 0;
+    for (int i=0;i<data.length; i++){
+      for (int j=0;j<data[i].length; j++){
+      total +=Integer.parseInt(data[i][j][3]);
+      }
+    }
+    return total;
+  }
 
 }
 
