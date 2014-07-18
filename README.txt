@@ -15,4 +15,4 @@ C. Please include the entire relative path to the file. That is, if your file "i
 
 D. If one of the files has a space in the name, put the entire name in quotes.
 
-E. You can use an existing file, or create a new one
+E. You can write to an existing file, or create a new one
