@@ -6,9 +6,9 @@ public class DataParser {
 
   public DataParser(String inputFile, String outputFile) throws IOException{
 
-    String[][]data = readFromFile(inputFile);
-    String[][][][] test = sortData(data);
-    formatOutput(outputFile, test);
+    String[][]rawData = readFromFile(inputFile);
+    String[][][][] formatedData = sortData(rawData);
+    formatOutput(outputFile, formatedData);
   
   }
   //This method will read data from file
@@ -37,7 +37,7 @@ public class DataParser {
     return data;
   }
 
-  //This method will sort data into a 4 dimesional array containing a an array for each symbol. Each symbol array will contain an array for each exchange within the symbol. Each exchange array will contain a row for every trade, and a row entry for every piece of data of the trade.
+  //This method will sort data into a 4 dimensional array containing an array for each symbol. Each symbol array will contain an array for each exchange within the symbol. Each exchange array will contain a row for every trade, and a row entry for every piece of data of the trade.
   public static String[][][][] sortData(String[][] data){
     String[][][][] sortedData = new String[data.length][data.length][data.length][4];
 
@@ -75,7 +75,7 @@ public class DataParser {
         }
       }
       if (! symbolExists){
-        //In this case, the symbol does not yet exist, so we put it in the next avilable spot.
+        //In this case, the symbol does not yet exist, so we put it in the next available spot.
         boolean notYet = true;
         for (int m=0; (notYet && m<sortedData.length); m++){ 
           if (sortedData[m][0][0][0]==null){
@@ -88,7 +88,7 @@ public class DataParser {
 
     }
     String[][][][] constrictedSortedData = constrictData(sortedData);
-    String[][][][] alphabetizedConstrictedSortedData = alphabatizeData(constrictedSortedData);
+    String[][][][] alphabetizedConstrictedSortedData = alphabetizeData(constrictedSortedData);
 
     return alphabetizedConstrictedSortedData;
   }
@@ -100,7 +100,7 @@ public class DataParser {
     boolean moreExchanges;
     boolean moreTrades;
     int numberOfSymbols;
-    //first we loop through top level to remove extranious
+    //first we loop through top level to remove extraneous
     for (int i = 0; moreSymbols && i<data.length; i++){
       if (data[i][0][0][0]==null){
         //in this case we have found our last Symbol
@@ -108,7 +108,7 @@ public class DataParser {
         moreSymbols = false;
       }
     }
-    //next we loop through middle level to remove extranious
+    //next we loop through middle level to remove extraneous
     for (int i=0; i<constrictedData.length; i++){
       moreExchanges = true;
       for (int j=0; moreExchanges && j<data[i].length; j++){
@@ -118,7 +118,7 @@ public class DataParser {
         }
       }
     }
-    //then we loop through third level to remove extranious
+    //then we loop through third level to remove extraneous
     for (int i=0; i<constrictedData.length; i++){
       for (int j=0; j < constrictedData[i].length; j++){
         moreTrades = true;
@@ -136,11 +136,11 @@ public class DataParser {
     return constrictedData;
   }
 
-  public static String[][][][] alphabatizeData(String[][][][] data){
+  public static String[][][][] alphabetizeData(String[][][][] data){
     String[] toSort;
     String[] toSortUpper = new String[data.length];
     int largestLength = 0;
-    //determine needed starting dimensions for alphebatized
+    //determine needed starting dimensions for alphabetized
     for (int i=0; i<data.length; i++){
       if (data[i].length > largestLength){
         largestLength = data[i].length;
@@ -168,7 +168,7 @@ public class DataParser {
           stillLookingUpper = false;
           alphabetized[i] = new String[data[n].length][0][4];
           for (int j=0; j<data[i].length;j++){
-          //lets find the thing in data[i], that goes with sorted[j], and copy that into alphebatized[i][j]
+          //let's find the thing in data[i], that goes with sorted[j], and copy that into alphabetized[i][j]
           boolean stillLooking = true;
             for (int k=0; stillLooking && k<data[i].length; k++){
               if (data[n][k][0][1].equals(toSort[j])){
@@ -194,7 +194,7 @@ public class DataParser {
       sum+=Double.parseDouble(data[i][2]);
     }
     float q = data.length;
-    if (q == 0){q=1;}
+    if (q == 0){q=1;}//to prevent divide by zero if the input is not as expected
     double ave = sum/q;
     double rounded = Math.round(ave*100)/100.0;
     return rounded;
@@ -209,7 +209,7 @@ public class DataParser {
         entries +=1;
       }
     }
-    if (entries == 0){entries=1;}
+    if (entries == 0){entries=1;}//to prevent divide by zero if the input is not as expected
     double ave = sum/entries;
     double rounded = (Math.round(ave*100))/100.0;
     return rounded;
