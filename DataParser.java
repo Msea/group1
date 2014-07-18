@@ -4,30 +4,11 @@ import java.util.Arrays;
 
 public class DataParser {
 
-  public static void main(String[] args) throws IOException {
+  public DataParser(String inputFile, String outputFile) throws IOException{
 
-    Scanner keyboard = new Scanner(System.in);
-    String inputFile;
-    String outputFile;
-
-    if (args.length >=2){
-    inputFile = args[0];
-    outputFile = args[1];
-}
-  else{
-    System.out.println("Please enter the name and path of the input file");
-    inputFile = keyboard.next();
-    System.out.println("Please enter the name and path of the output file");
-    outputFile = keyboard.next();
-
-  }
-System.out.print(inputFile);
-System.out.print(outputFile);
-
-    String[][]data = readFromFile("Data Files/sample-input.csv");
+    String[][]data = readFromFile(inputFile);
     String[][][][] test = sortData(data);
-    formatOutput("test.txt", test);
-
+    formatOutput(outputFile, test);
   
   }
   //This method will read data from file
