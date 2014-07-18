@@ -7,14 +7,20 @@ public class DataParser {
   public static void main(String[] args) throws IOException {
 
     Scanner keyboard = new Scanner(System.in);
-    //String[][] data = new String[8][8];
+
+    String[][]data = readFromFile("Data Files/sample-input.csv");
+    String[][][][] test = sortData(data);
+    formatOutput("test.txt", test);
+
+  
+  }
+  //This method will read data from file
+  public static String[][] readFromFile(String fileName) throws IOException {
     int numberOfTrades = -1;
     String[][] data;
     String fromFile;
-    //data = new String[cols][rows];
 
-//put all this in method
-    Scanner scanFile = new Scanner(new FileReader ("Data Files/sample-input.csv"));
+    Scanner scanFile = new Scanner(new FileReader (fileName));
     while (scanFile.hasNext()){
       scanFile.next();
       numberOfTrades++;
@@ -23,7 +29,7 @@ public class DataParser {
     data = new String[numberOfTrades][4];
 
     int counter = -1;
-    Scanner scanFileAgain = new Scanner(new FileReader ("Data Files/sample-input.csv"));
+    Scanner scanFileAgain = new Scanner(new FileReader (fileName));
     while (scanFileAgain.hasNext()){
       fromFile = scanFileAgain.next();
       if ( counter >= 0){
@@ -31,11 +37,7 @@ public class DataParser {
       }
       counter++;
     }
-String[][][][] test = sortData(data);
-formatOutput("test.txt", test);
-
-
-  
+    return data;
   }
 
   //This method will sort data into a 4 dimesional array containing a an array for each symbol. Each symbol array will contain an array for each exchange within the symbol. Each exchange array will contain a row for every trade, and a row entry for every piece of data of the trade.
@@ -304,7 +306,12 @@ formatOutput("test.txt", test);
         printWriter.printf("%.2f,", minPriceSymExchgn(data[i][j]));
         printWriter.printf("%.2f,", averagePriceSymExchgn(data[i][j]));
         printWriter.printf("%.2f,", maxPriceSymExchgn(data[i][j]));
-        printWriter.println(Integer.toString(totalQuantSymExchgn(data[i][j])));
+        if (i==data.length-1 && j==data.length-2){
+          printWriter.print(Integer.toString(totalQuantSymExchgn(data[i][j])));
+        }
+        else {
+          printWriter.println(Integer.toString(totalQuantSymExchgn(data[i][j])));
+        }
       }
     }
     printWriter.close();
