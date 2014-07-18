@@ -298,12 +298,6 @@ public class DataParser {
       printWriter.println(Integer.toString(totalQuantSym(data[i])));
       for(int j=0; j<data[i].length; j++){
       // calculate values for exchange
-        //System.out.print(i);
-        //System.out.print(data[i][0][0][0]);
-        //System.out.print(data[i][j][0][1]);
-        //System.out.println(j);
-//System.out.print(data[i].length);
-  //      String[] h = data[i][j][0];
         toPrint = data[i][j][0][0] + ",";
         toPrint += data[i][j][0][1]+",";
         printWriter.print(toPrint);
@@ -322,7 +316,3 @@ public class DataParser {
   }
 
 }
-
-//to compile and run
-//javac DataParser.java
-//java DataParser
