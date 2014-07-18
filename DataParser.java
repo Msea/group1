@@ -161,14 +161,15 @@ public class DataParser {
       Arrays.sort(toSort);
       //now let's put them back in order
       //first find the thing in the top level data, that goes with Uppersorted[i]
-        boolean stillLookingUpper = true; 
-        for (int n=0; stillLookingUpper && n<data.length; n++){
-          if (data[n][0][0][0].equals(toSortUpper[i])){
-            //found it
-            stillLookingUpper = false;
-            for (int j=0; j<data[i].length;j++){
-            //lets find the thing in data[i], that goes with sorted[j], and copy that into alphebatized[i][j]
-            boolean stillLooking = true;
+      boolean stillLookingUpper = true; 
+      for (int n=0; stillLookingUpper && n<data.length; n++){
+        if (data[n][0][0][0].equals(toSortUpper[i])){
+          //found it
+          stillLookingUpper = false;
+          alphabetized[i] = new String[data[n].length][0][4];
+          for (int j=0; j<data[i].length;j++){
+          //lets find the thing in data[i], that goes with sorted[j], and copy that into alphebatized[i][j]
+          boolean stillLooking = true;
             for (int k=0; stillLooking && k<data[i].length; k++){
               if (data[n][k][0][1].equals(toSort[j])){
                 //found it
@@ -297,13 +298,19 @@ public class DataParser {
       printWriter.println(Integer.toString(totalQuantSym(data[i])));
       for(int j=0; j<data[i].length; j++){
       // calculate values for exchange
+        //System.out.print(i);
+        //System.out.print(data[i][0][0][0]);
+        //System.out.print(data[i][j][0][1]);
+        //System.out.println(j);
+//System.out.print(data[i].length);
+  //      String[] h = data[i][j][0];
         toPrint = data[i][j][0][0] + ",";
         toPrint += data[i][j][0][1]+",";
         printWriter.print(toPrint);
         printWriter.printf("%.2f,", minPriceSymExchgn(data[i][j]));
         printWriter.printf("%.2f,", averagePriceSymExchgn(data[i][j]));
         printWriter.printf("%.2f,", maxPriceSymExchgn(data[i][j]));
-        if (i==data.length-1 && j==data.length-2){
+        if (i==data.length-1 && j==data[i].length-1){
           printWriter.print(Integer.toString(totalQuantSymExchgn(data[i][j])));
         }
         else {
