@@ -15,11 +15,4 @@ C. Please include the entire relative path to the file. That is, if your file "i
 
 D. If one of the files has a space in the name, put the entire name in quotes.
 
-
-
-
-
-
-
-
-    Output files produced by your application from the supplied input files labeled as output[1-3].csv
+E. You can use an existing file, or create a new one
