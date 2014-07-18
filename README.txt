@@ -1,3 +1,5 @@
+0. The following directions should be followed from the command line at the root of this directory, that is from the folder group1. If you do not have it clone it from here by typing "git clone git@github.com:Msea/group1.git" in your command line and pressing enter, and then cd into group1.
+
 If this is your first time using this program on this machine start here, otherwise start with step 3. below:
 
 1. Type "javac DataParser.java" into your command prompt and hit enter to compile the DataParser
