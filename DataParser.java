@@ -6,8 +6,6 @@ public class DataParser {
 
   public static void main(String[] args) throws IOException {
 
-    PrintWriter printWriter;
-    printWriter = new PrintWriter (new FileWriter("test.txt"));
     Scanner keyboard = new Scanner(System.in);
     //String[][] data = new String[8][8];
     int numberOfTrades = -1;
@@ -16,7 +14,7 @@ public class DataParser {
     //data = new String[cols][rows];
 
 //put all this in method
-    Scanner scanFile = new Scanner(new FileReader ("Data Files/input1.csv"));
+    Scanner scanFile = new Scanner(new FileReader ("Data Files/sample-input.csv"));
     while (scanFile.hasNext()){
       scanFile.next();
       numberOfTrades++;
@@ -25,7 +23,7 @@ public class DataParser {
     data = new String[numberOfTrades][4];
 
     int counter = -1;
-    Scanner scanFileAgain = new Scanner(new FileReader ("Data Files/input1.csv"));
+    Scanner scanFileAgain = new Scanner(new FileReader ("Data Files/sample-input.csv"));
     while (scanFileAgain.hasNext()){
       fromFile = scanFileAgain.next();
       if ( counter >= 0){
@@ -33,42 +31,11 @@ public class DataParser {
       }
       counter++;
     }
-    
-    
-  String[][][][] test = sortData(data);
-  float a = averagePriceSymExchgn(test[0][1]);
-  float b = averagePriceSym(test[0]);
-  float c = minPriceSymExchgn(test[0][0]);
-  float d = minPriceSym(test[0]);
-  float e = maxPriceSymExchgn(test[0][0]);
-  float f = maxPriceSym(test[0]);
-    int g = totalQuantSymExchgn(test[0][0]);
-  int h = totalQuantSym(test[0]);
-  System.out.print(a);
-  System.out.print(b);
-  System.out.print(c);
-  System.out.print(d);  System.out.print(e);
-  System.out.print(f);
-  System.out.print(g);
-  System.out.print(h); 
+String[][][][] test = sortData(data);
+formatOutput("test.txt", test);
 
 
-
-  for(int i=0; i<test.length; i++){
-    //printWriter.println("new symbol");
-    for(int j=0; j<test[i].length; j++){
-     // printWriter.println("new exchange");
-      for (int k=0; k<test[i][j].length; k++){
-      //  printWriter.println("new row");
-        for (int m=0; m<test[i][j][k].length; m++){
-          printWriter.print(test[i][j][k][m]);
-          printWriter.print(",");
-        }
-        printWriter.println("");
-      }
-    }
-  }
-printWriter.close();
+  
   }
 
   //This method will sort data into a 4 dimesional array containing a an array for each symbol. Each symbol array will contain an array for each exchange within the symbol. Each exchange array will contain a row for every trade, and a row entry for every piece of data of the trade.
@@ -221,25 +188,31 @@ printWriter.close();
     return alphabetized;
   }
 
-  public static float averagePriceSymExchgn(String[][] data){
-    float sum = 0;
+  public static double averagePriceSymExchgn(String[][] data){
+    double sum = 0;
     for (int i=0;i<data.length; i++){
-      sum+=Float.parseFloat(data[i][2]);
+      sum+=Double.parseDouble(data[i][2]);
     }
-    return (sum/data.length);
+    float q = data.length;
+    if (q == 0){q=1;}
+    double ave = sum/q;
+    double rounded = Math.round(ave*100)/100.0;
+    return rounded;
   }
 
-  public static float averagePriceSym(String[][][] data){
-    float sum = 0;
-    float entries = 0;
+  public static double averagePriceSym(String[][][] data){
+    double sum = 0;
+    double entries = 0;
     for (int i=0;i<data.length; i++){
       for (int j=0;j<data[i].length; j++){
-        sum += Float.parseFloat(data[i][j][2]);
+        sum += Double.parseDouble(data[i][j][2]);
         entries +=1;
       }
     }
     if (entries == 0){entries=1;}
-    return (sum/entries);
+    double ave = sum/entries;
+    double rounded = (Math.round(ave*100))/100.0;
+    return rounded;
   }
 
   public static float minPriceSymExchgn(String[][] data){
@@ -306,6 +279,35 @@ printWriter.close();
       }
     }
     return total;
+  }
+
+  public static void formatOutput(String fileName, String[][][][] data) throws IOException{
+    PrintWriter printWriter;
+    printWriter = new PrintWriter (new FileWriter(fileName));
+    String toPrint;
+
+    printWriter.println("Symbol,Exchange,Min Price,Avg Price,Max Price,Total Qty");
+    
+    for(int i=0; i<data.length; i++){
+      //calculate values for this symbol first
+      toPrint = data[i][0][0][0] + ",,";
+      printWriter.print(toPrint);
+      printWriter.printf("%.2f,", minPriceSym(data[i]));
+      printWriter.printf("%.2f,", averagePriceSym(data[i]));
+      printWriter.printf("%.2f,", maxPriceSym(data[i]));
+      printWriter.println(Integer.toString(totalQuantSym(data[i])));
+      for(int j=0; j<data[i].length; j++){
+      // calculate values for exchange
+        toPrint = data[i][j][0][0] + ",";
+        toPrint += data[i][j][0][1]+",";
+        printWriter.print(toPrint);
+        printWriter.printf("%.2f,", minPriceSymExchgn(data[i][j]));
+        printWriter.printf("%.2f,", averagePriceSymExchgn(data[i][j]));
+        printWriter.printf("%.2f,", maxPriceSymExchgn(data[i][j]));
+        printWriter.println(Integer.toString(totalQuantSymExchgn(data[i][j])));
+      }
+    }
+    printWriter.close();
   }
 
 }
